@@ -1,0 +1,10 @@
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\bin\Release\tfcmp_yvun.exe.config
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\bin\Release\tfcmp_yvun.exe
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\bin\Release\tfcmp_yvun.pdb
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.csprojAssemblyReference.cache
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.Form1.resources
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.Properties.Resources.resources
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.csproj.GenerateResource.cache
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.csproj.CoreCompileInputs.cache
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.exe
+C:\Users\pyui\source\repos\tfcmp_yvun\tfcmp_yvun\obj\Release\tfcmp_yvun.pdb
