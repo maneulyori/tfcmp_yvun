@@ -83,10 +83,14 @@ namespace tfcmp_yvun //youtube video upload notification
             //article category select
             webBrowser1.Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
             webBrowser1.Document.GetElementById("subject").SetAttribute("value", "[유튜브 영상] " + video_data.title);
+
+            /*
             webBrowser1.Document.Window.Frames["frame"].Document.Body.InnerHtml = 
                 "<iframe width=\"560\" height=\"315\" src=\"" +
                 "https://www.youtube.com/embed/" + video_data.link +
                 "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+
+            */
 
             HtmlElementCollection hec = webBrowser1.Document.GetElementsByTagName("a");
 
