@@ -22,7 +22,6 @@ namespace tfcmp_yvun //youtube video upload notification
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            /*
             if (Environment.Is64BitOperatingSystem) // 운영체제 종류 확인 (64비트)
             {
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
@@ -33,7 +32,7 @@ namespace tfcmp_yvun //youtube video upload notification
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".vshost.exe", 11001);
             }
-            */
+
             webBrowser1.Navigate("https://www.naver.com");
         }
 
