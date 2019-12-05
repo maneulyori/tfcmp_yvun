@@ -22,6 +22,7 @@ namespace tfcmp_yvun //youtube video upload notification
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            /*
             if (Environment.Is64BitOperatingSystem) // 운영체제 종류 확인 (64비트)
             {
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
@@ -32,6 +33,7 @@ namespace tfcmp_yvun //youtube video upload notification
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".vshost.exe", 11001);
             }
+            */
 
             webBrowser1.Navigate("https://www.naver.com");
         }
@@ -65,7 +67,7 @@ namespace tfcmp_yvun //youtube video upload notification
         }
         void upload_cafe_article(Video_Data video_data)
         {
-            webBrowser1.Navigate("https://m.cafe.naver.com/ArticleWrite.nhn?m=write&clubid=29441533&menuid=");
+            webBrowser1.Navigate("https://m.cafe.naver.com/ArticleWrite.nhn?m=write&clubid=29846417&menuid=");
 
             while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
             {
@@ -74,7 +76,7 @@ namespace tfcmp_yvun //youtube video upload notification
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            while (sw.ElapsedMilliseconds < 2000)
+            while (sw.ElapsedMilliseconds < 3000)
             {
                 Application.DoEvents();
             }
@@ -84,6 +86,7 @@ namespace tfcmp_yvun //youtube video upload notification
             webBrowser1.Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
             webBrowser1.Document.GetElementById("subject").SetAttribute("value", "[유튜브 영상] " + video_data.title);
 
+            webBrowser1.Document.Window.Frames["frame"].Document.Body.InnerHtml = "a";
             /*
             webBrowser1.Document.Window.Frames["frame"].Document.Body.InnerHtml = 
                 "<iframe width=\"560\" height=\"315\" src=\"" +
