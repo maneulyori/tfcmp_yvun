@@ -66,7 +66,7 @@
             // 
             // timer1
             // 
-            this.timer1.Interval = 60000;
+            this.timer1.Interval = 120000;
             this.timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // Form1

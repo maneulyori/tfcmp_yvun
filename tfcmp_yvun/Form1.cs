@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace tfcmp_yvun //youtube video upload notification
+namespace tfcmp_yvun //youtube video (and community) upload notification
 {
     public partial class Form1 : Form
     {
@@ -34,11 +34,28 @@ namespace tfcmp_yvun //youtube video upload notification
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".vshost.exe", 11001);
             }
             */
-
             webBrowser1.Navigate("https://www.naver.com");
+            //webBrowser1.Navigate("https://cafe.naver.com/otyutest1");
+
         }
 
         void main()
+        {
+            yvun_main();
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            while (sw.ElapsedMilliseconds < 1000 * 10)
+            {
+                Application.DoEvents();
+            }
+            sw.Stop();
+
+            ycun_main();
+
+        }
+
+        void yvun_main()
         {
             webBrowser1.Navigate("https://www.youtube.com/channel/UCTSaxXnhUcrhv984bVpDr6Q/videos");
 
@@ -52,19 +69,42 @@ namespace tfcmp_yvun //youtube video upload notification
             string title = Regex.Match(video_data_raw, "(?<=rel=\"nofollow\">)(.*?)(?=</a>)").Value;
 
             Video_Data web_video_data = new Video_Data(link, title);
-            string file_video_data_link = File.ReadAllText("test.txt");
+            string file_video_data_link = File.ReadAllText("video_link.txt");
 
             if (web_video_data.link != file_video_data_link)
             {
-                //notification
                 upload_cafe_article(web_video_data);
-                File.WriteAllText("test.txt", web_video_data.link);
+                File.WriteAllText("video_link.txt", web_video_data.link);
             }
             else
             {
 
             }
         }
+        void ycun_main()
+        {
+            webBrowser1.Navigate("https://www.youtube.com/channel/UCTSaxXnhUcrhv984bVpDr6Q/community");
+
+
+            while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
+            {
+                Application.DoEvents();
+            }
+
+            string web_community_link = Regex.Match(webBrowser1.DocumentText, "(?<=tabindex=\"0\"><a href=\"\\/post\\/)(.*?)(?=\")", RegexOptions.Singleline).Value;
+            string file_community_link = File.ReadAllText("community_link.txt");
+
+            if (web_community_link != file_community_link)
+            {
+                upload_cafe_article_community(web_community_link);
+                File.WriteAllText("community_link.txt", web_community_link);
+            }
+            else
+            {
+
+            }
+        }
+
         void upload_cafe_article(Video_Data video_data)
         {
             webBrowser1.Navigate("https://m.cafe.naver.com/ArticleWrite.nhn?m=write&clubid=29846417&menuid=");
@@ -101,6 +141,103 @@ namespace tfcmp_yvun //youtube video upload notification
                     break;
                 }
             }
+        }
+        void upload_cafe_article_community(string web_community_link)
+        {
+            webBrowser1.Navigate("https://cafe.naver.com/yellowticket");
+
+            while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
+            {
+                Application.DoEvents();
+            }
+
+            //move to article write page
+            HtmlElementCollection hec = webBrowser1.Document.GetElementsByTagName("a");
+            foreach (HtmlElement he in hec)
+            {
+                if (he.InnerText == "카페 글쓰기")
+                {
+                    he.InvokeMember("click");
+                    break;
+                }
+            }
+
+            //wait article write page load
+            while(true)
+            {
+                try
+                {
+                    Console.WriteLine(webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("frmWrite").InnerText);
+                    break;
+                }
+                catch
+                {
+
+                }
+                Application.DoEvents();
+            }
+
+            //write article
+            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
+            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("subject").SetAttribute("value", "[유튜브 커뮤니티] " +
+                DateTime.Now.Year + "년 " +
+                DateTime.Now.Month + "월 " +
+                DateTime.Now.Day + "일 " +
+                DateTime.Now.Hour + "시 " +
+                DateTime.Now.Minute + "분 " +
+                DateTime.Now.Second + "초 " +
+                "업로드");
+
+            HtmlElementCollection hec2 = webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("a");
+            foreach (HtmlElement he in hec2)
+            {
+                if (he.InnerText == "링크")
+                {
+                    he.InvokeMember("click");
+                    break;
+                }
+            }
+
+            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("attachLinkUrl").Focus();
+
+            Stopwatch sw3 = new Stopwatch();
+            sw3.Start();
+            while (sw3.ElapsedMilliseconds < 2000)
+            {
+                Application.DoEvents();
+            }
+            sw3.Stop();
+
+            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("attachLinkUrl").SetAttribute("value", "https://www.youtube.com/channel/UCTSaxXnhUcrhv984bVpDr6Q/community?lb=" + web_community_link);
+
+            HtmlElementCollection hec3 = webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("button");
+            foreach (HtmlElement he in hec3)
+            {
+                if (he.InnerText == "미리보기")
+                {
+                    he.InvokeMember("click");
+                    break;
+                }
+            }
+
+            while (Regex.Match(webBrowser1.Document.Window.Frames["cafe_main"].Document.Body.InnerHtml, "(?<=<div class=\"se2_og_content\" id=\"attachLinkPreview\" style=\"display: )(.*?)(?=;\">)", RegexOptions.Singleline).Value != "block")
+            {
+                Application.DoEvents();
+            }
+
+            HtmlElementCollection hec4 = webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("button");
+            foreach (HtmlElement he in hec4)
+            {
+                if (he.InnerText == "적용")
+                {
+                    he.InvokeMember("click");
+                    break;
+                }
+            }
+
+            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("cafewritebtn").InvokeMember("click");
+
+            Console.WriteLine(web_community_link);
         }
 
         private void Label1_Click(object sender, EventArgs e)
