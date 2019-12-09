@@ -70,11 +70,12 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
 
             Video_Data web_video_data = new Video_Data(link, title);
             string file_video_data_link = File.ReadAllText("video_link.txt");
+            List<string> file_video_data_link_list = new List<string>(Regex.Split(file_video_data_link, "\r\n"));
 
-            if (web_video_data.link != file_video_data_link)
+            if (file_video_data_link_list.Contains(web_video_data.link) == false)
             {
                 upload_cafe_article(web_video_data);
-                File.WriteAllText("video_link.txt", web_video_data.link);
+                File.AppendAllText("video_link.txt", "\r\n" + web_video_data.link);
             }
             else
             {
@@ -93,11 +94,12 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
 
             string web_community_link = Regex.Match(webBrowser1.DocumentText, "(?<=tabindex=\"0\"><a href=\"\\/post\\/)(.*?)(?=\")", RegexOptions.Singleline).Value;
             string file_community_link = File.ReadAllText("community_link.txt");
+            List<string> file_community_link_list = new List<string>(Regex.Split(file_community_link, "\r\n"));
 
-            if (web_community_link != file_community_link)
+            if (file_community_link_list.Contains(web_community_link) == false)
             {
                 upload_cafe_article_community(web_community_link);
-                File.WriteAllText("community_link.txt", web_community_link);
+                File.AppendAllText("community_link.txt", "\r\n" + web_community_link);
             }
             else
             {
@@ -107,13 +109,14 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
 
         void upload_cafe_article(Video_Data video_data)
         {
+            //mobile naver cafe write page
             webBrowser1.Navigate("https://m.cafe.naver.com/ArticleWrite.nhn?m=write&clubid=29846417&menuid=");
 
             while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
             {
                 Application.DoEvents();
             }
-
+            
             Stopwatch sw = new Stopwatch();
             sw.Start();
             while (sw.ElapsedMilliseconds < 3000)
@@ -122,7 +125,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
             }
             sw.Stop();
 
-            //article category select
+            //article category select //selectedIndex = 4
             webBrowser1.Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
             webBrowser1.Document.GetElementById("subject").SetAttribute("value", "[유튜브 영상] " + video_data.title);
 
@@ -144,6 +147,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
         }
         void upload_cafe_article_community(string web_community_link)
         {
+            //desktop naver cafe main page
             webBrowser1.Navigate("https://cafe.naver.com/yellowticket");
 
             while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
@@ -177,7 +181,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
                 Application.DoEvents();
             }
 
-            //write article
+            //write article //selectedIndex = 4
             webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
             webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("subject").SetAttribute("value", "[유튜브 커뮤니티] " +
                 DateTime.Now.Year + "년 " +
@@ -185,8 +189,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
                 DateTime.Now.Day + "일 " +
                 DateTime.Now.Hour + "시 " +
                 DateTime.Now.Minute + "분 " +
-                DateTime.Now.Second + "초 " +
-                "업로드");
+                "알림");
 
             HtmlElementCollection hec2 = webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementsByTagName("a");
             foreach (HtmlElement he in hec2)
