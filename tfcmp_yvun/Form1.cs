@@ -201,7 +201,19 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
                 }
             }
 
-            webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("attachLinkUrl").Focus();
+            while (true)
+            {
+                try
+                {
+                    webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("attachLinkUrl").Focus();
+                    break;
+                }
+                catch
+                {
+
+                }
+                Application.DoEvents();
+            }
 
             Stopwatch sw3 = new Stopwatch();
             sw3.Start();
