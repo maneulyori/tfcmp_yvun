@@ -22,7 +22,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            /*
             if (Environment.Is64BitOperatingSystem) // 운영체제 종류 확인 (64비트)
             {
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Internet Explorer\MAIN\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
@@ -33,7 +33,7 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".exe", 11001);
                 Microsoft.Win32.Registry.SetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION", Application.ProductName + ".vshost.exe", 11001);
             }
-            
+            */
             webBrowser1.Navigate("https://www.naver.com");
             //webBrowser1.Navigate("https://cafe.naver.com/otyutest1");
 
@@ -82,15 +82,18 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
 
             }
         }
+
         void ycun_main()
         {
             webBrowser1.Navigate("https://www.youtube.com/channel/UCTSaxXnhUcrhv984bVpDr6Q/community");
-
 
             while (webBrowser1.ReadyState != WebBrowserReadyState.Complete)
             {
                 Application.DoEvents();
             }
+
+            MatchCollection mc = Regex.Matches(webBrowser1.DocumentText, "(?<=tabindex=\"0\"><a href=\"\\/post\\/)(.*?)(?=\")", RegexOptions.Singleline);
+            Console.WriteLine(mc[6]);
 
             string web_community_link = Regex.Match(webBrowser1.DocumentText, "(?<=tabindex=\"0\"><a href=\"\\/post\\/)(.*?)(?=\")", RegexOptions.Singleline).Value;
             string file_community_link = File.ReadAllText("community_link.txt");
@@ -116,20 +119,12 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
             {
                 Application.DoEvents();
             }
-            
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-            while (sw.ElapsedMilliseconds < 3000)
-            {
-                Application.DoEvents();
-            }
-            sw.Stop();
 
             //article category select //selectedIndex = 4
             webBrowser1.Document.GetElementsByTagName("select")[0].SetAttribute("selectedIndex", "4");
             webBrowser1.Document.GetElementById("subject").SetAttribute("value", "[유튜브 영상] " + video_data.title);
 
-            webBrowser1.Document.Window.Frames["frame"].Document.Body.InnerHtml = 
+            webBrowser1.Document.Window.Frames["frame"].Document.Body.InnerHtml =
                 "<iframe width=\"560\" height=\"315\" src=\"" +
                 "https://www.youtube.com/embed/" + video_data.link +
                 "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
@@ -167,11 +162,11 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
             }
 
             //wait article write page load
-            while(true)
+            while (true)
             {
                 try
                 {
-                    Console.WriteLine(webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("frmWrite").InnerText);
+                    string buffer = webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("frmWrite").InnerText;
                     break;
                 }
                 catch
@@ -200,6 +195,14 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
                     break;
                 }
             }
+
+            Stopwatch sw2 = new Stopwatch();
+            sw2.Start();
+            while (sw2.ElapsedMilliseconds < 3000)
+            {
+                Application.DoEvents();
+            }
+            sw2.Stop();
 
             while (true)
             {
@@ -251,13 +254,11 @@ namespace tfcmp_yvun //youtube video (and community) upload notification
             }
 
             webBrowser1.Document.Window.Frames["cafe_main"].Document.GetElementById("cafewritebtn").InvokeMember("click");
-
-            Console.WriteLine(web_community_link);
         }
 
         private void Label1_Click(object sender, EventArgs e)
         {
-            if(timer1.Enabled == false)
+            if (timer1.Enabled == false)
             {
                 timer1.Start();
                 label1.Text = "RUN";
